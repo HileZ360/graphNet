@@ -18,7 +18,6 @@ from Src.resources import resource_path
 
 app = App("GraphNet", resource_path("logger_config.json"),
           resource_path("fonts_config.json"), resource_path("themes.json"))
-assert dpg.does_item_exist("Prime")
 assert not dpg.is_viewport_ok()
 native_destroy = dpg.destroy_context
 calls = []
@@ -29,9 +28,13 @@ dpg.destroy_context = destroy
 if {mode!r} == "unshown":
     dpg.destroy_context()
 else:
-    dpg.set_frame_callback(3, dpg.stop_dearpygui)
+    def stop():
+        assert dpg.does_item_exist("Prime")
+        dpg.stop_dearpygui()
+    dpg.set_frame_callback(3, stop)
     if {mode!r} == "loop_error":
         def fail():
+            assert dpg.does_item_exist("Prime")
             dpg.render_dearpygui_frame()
             raise RuntimeError("render loop failure")
         dpg.start_dearpygui = fail

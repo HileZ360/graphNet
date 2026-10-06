@@ -51,12 +51,6 @@ class App:
         self.event_manager = EventManager()
         self.__last_zoom_time = 0.0
 
-        dpg.setup_dearpygui()
-
-        self._create_ui()
-
-        self.size_manager = SizeManager()
-
 
     def _setup_logging(self):
         """Настраивает систему логирования."""
@@ -123,7 +117,10 @@ class App:
         """Запускает главный цикл приложения."""
         try:
             dpg.create_viewport(title=self.title)
+            dpg.setup_dearpygui()
             dpg.show_viewport()
+            self._create_ui()
+            self.size_manager = SizeManager()
             self.node_editor.on_viewport_resize_callback()
             self.logger.info("Приложение запущено.")
             dpg.start_dearpygui()
